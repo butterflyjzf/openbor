@@ -2420,6 +2420,7 @@ void execute_pdie_script(int index)
 void clearbuttons(int player)
 {
     savedata.joyrumble[player] = 0;
+	savedata.keys[player][SDID_AXISUP] = savedata.keys[player][SDID_AXISDOWN] = savedata.keys[player][SDID_AXISLEFT] = savedata.keys[player][SDID_AXISRIGHT] = 0; // FCANEW
 
     if (player == 0)
     {
@@ -35472,10 +35473,10 @@ void apply_controls()
     {
         //control_setkey(playercontrolpointers[p], FLAG_ESC,        CONTROL_ESC); // FCA
 		control_setkey(playercontrolpointers[p], FLAG_ESC,	      savedata.keys[p][SDID_ESC]); // FCA
-        control_setkey(playercontrolpointers[p], FLAG_MOVEUP,     savedata.keys[p][SDID_MOVEUP]);
-        control_setkey(playercontrolpointers[p], FLAG_MOVEDOWN,   savedata.keys[p][SDID_MOVEDOWN]);
-        control_setkey(playercontrolpointers[p], FLAG_MOVELEFT,   savedata.keys[p][SDID_MOVELEFT]);
-        control_setkey(playercontrolpointers[p], FLAG_MOVERIGHT,  savedata.keys[p][SDID_MOVERIGHT]);
+        control_setkey(playercontrolpointers[p], FLAG_PADUP,     savedata.keys[p][SDID_MOVEUP]); // FCANEW
+        control_setkey(playercontrolpointers[p], FLAG_PADDOWN,   savedata.keys[p][SDID_MOVEDOWN]); // FCANEW
+        control_setkey(playercontrolpointers[p], FLAG_PADLEFT,   savedata.keys[p][SDID_MOVELEFT]); // FCANEW
+        control_setkey(playercontrolpointers[p], FLAG_PADRIGHT,  savedata.keys[p][SDID_MOVERIGHT]); // FCANEW
         control_setkey(playercontrolpointers[p], FLAG_ATTACK,     savedata.keys[p][SDID_ATTACK]);
         control_setkey(playercontrolpointers[p], FLAG_ATTACK2,    savedata.keys[p][SDID_ATTACK2]);
         control_setkey(playercontrolpointers[p], FLAG_ATTACK3,    savedata.keys[p][SDID_ATTACK3]);
@@ -35484,6 +35485,10 @@ void apply_controls()
         control_setkey(playercontrolpointers[p], FLAG_SPECIAL,    savedata.keys[p][SDID_SPECIAL]);
         control_setkey(playercontrolpointers[p], FLAG_START,      savedata.keys[p][SDID_START]);
         control_setkey(playercontrolpointers[p], FLAG_SCREENSHOT, savedata.keys[p][SDID_SCREENSHOT]);
+		control_setkey(playercontrolpointers[p], FLAG_AXISUP, savedata.keys[p][SDID_AXISUP]); // FCANEW
+		control_setkey(playercontrolpointers[p], FLAG_AXISDOWN, savedata.keys[p][SDID_AXISDOWN]); // FCANEW
+		control_setkey(playercontrolpointers[p], FLAG_AXISLEFT, savedata.keys[p][SDID_AXISLEFT]); // FCANEW
+		control_setkey(playercontrolpointers[p], FLAG_AXISRIGHT, savedata.keys[p][SDID_AXISRIGHT]); // FCANEW
     }
 }
 
@@ -38331,7 +38336,7 @@ void keyboard_setup(int player)
         selector = 0,
         setting = -1,
         i, k, ok = 0,
-              disabledkey[MAX_BTN_NUM] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+              disabledkey[MAX_BTN_NUM] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 }, // FCANEW {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
                                 col1 = -8, col2 = 6;
     ptrdiff_t voffset, pos;
     char *buf,
@@ -38362,6 +38367,11 @@ void keyboard_setup(int player)
     strcpy(buttonnames[SDID_START], "Start");
     strcpy(buttonnames[SDID_SCREENSHOT], "Screenshot");
     strcpy(buttonnames[SDID_ESC], "Exit");
+	
+	strcpy(buttonnames[SDID_AXISUP], "Axis Up"); // FCANEW
+	strcpy(buttonnames[SDID_AXISDOWN], "Axis Down"); // FCANEW
+	strcpy(buttonnames[SDID_AXISLEFT], "Axis Left"); // FCANEW
+	strcpy(buttonnames[SDID_AXISRIGHT], "Axis Right"); // FCANEW
 
     savesettings();
     bothnewkeys = 0;
