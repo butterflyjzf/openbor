@@ -2542,7 +2542,7 @@ void clearsettings()
     savedata.logo = 0;
     savedata.uselog = 1;
     savedata.debuginfo = 0;
-    savedata.fullscreen = 0;
+    savedata.fullscreen = 1; // FCA : default to fullscreen
     savedata.vsync = 1;
 
 	#if WII
@@ -2584,6 +2584,8 @@ void clearsettings()
 
 void savesettings()
 {
+	saveasdefault(); return;  // FCA : disable per game settings
+
 #ifndef DC
     FILE *handle = NULL;
     char path[MAX_BUFFER_LEN] = {""};
@@ -2601,8 +2603,201 @@ void savesettings()
 #endif
 }
 
+
+#if SDL
+extern char savesDir[MAX_FILENAME_LEN];
+extern char screenShotsDir[MAX_FILENAME_LEN];
+#endif
+
+// FCA
+void saveToIni()
+{
+	FILE *handle = NULL;
+	char path[MAX_BUFFER_LEN] = { "" };
+
+#if !WIN
+	strcpy(path, "/userdata/system/configs/openbor/config.ini");
+	handle = fopen(path, "wb");
+#endif
+
+	if (handle == NULL)
+	{
+		strcat(path, "./config.ini");
+		handle = fopen(path, "wb");
+	}
+		
+	if (handle == NULL)
+		return;
+	
+	fprintf(handle, "gamma=%i\n", savedata.gamma);
+	fprintf(handle, "brightness=%i\n", savedata.brightness);
+	fprintf(handle, "soundvol=%i\n", savedata.soundvol);
+	fprintf(handle, "usemusic=%i\n", savedata.usemusic);
+	fprintf(handle, "musicvol=%i\n", savedata.musicvol);
+	fprintf(handle, "effectvol=%i\n", savedata.effectvol);
+	fprintf(handle, "usejoy=%i\n", savedata.usejoy);
+	fprintf(handle, "mode=%i\n", savedata.mode);
+	fprintf(handle, "windowpos=%i\n", savedata.windowpos);
+	fprintf(handle, "showtitles=%i\n", savedata.showtitles);
+	fprintf(handle, "videoNTSC=%i\n", savedata.videoNTSC);
+	fprintf(handle, "swfilter=%i\n", savedata.swfilter);
+	fprintf(handle, "logo=%i\n", savedata.logo);
+	fprintf(handle, "uselog=%i\n", savedata.uselog);
+	fprintf(handle, "debuginfo=%i\n", savedata.debuginfo);
+	fprintf(handle, "fullscreen=%i\n", savedata.fullscreen);
+	fprintf(handle, "stretch=%i\n", savedata.stretch);
+	fprintf(handle, "vsync=%i\n", savedata.vsync);
+#if SDL
+	fprintf(handle, "usegl=%i\n", savedata.usegl);
+	fprintf(handle, "hwscale=%f\n", savedata.hwscale);
+	fprintf(handle, "hwfilter=%i\n", savedata.hwfilter);
+
+#ifndef ANDROID
+	if (strcmp(savesDir, "Saves") != 0)
+		fprintf(handle, "savesDir=%s\n", savesDir);
+	
+	if (strcmp(screenShotsDir, "ScreenShots") != 0)
+		fprintf(handle, "screenShotsDir=%s\n", screenShotsDir);
+#endif
+
+#endif
+	
+	char tmp[255];
+	
+	for (int i = 0; i < MAX_PLAYERS; i++)
+	{
+		for (int j = 0; j < MAX_BTN_NUM; j++)
+		{
+			sprintf(tmp, "keys.%i.%i=%i\n", i, j, savedata.keys[i][j]);
+			fprintf(handle, tmp);
+		}
+	}
+
+	for (int i = 0; i < MAX_PLAYERS; i++)
+	{
+		sprintf(tmp, "joyrumble.%i=%i\n", i, savedata.joyrumble[i]);
+		fprintf(handle, tmp);
+	}
+
+	fclose(handle);
+}
+
+bool loadfromIni()
+{
+	FILE *handle = NULL;
+	char path[MAX_BUFFER_LEN] = { "" };
+
+#if !WIN
+	strcpy(path, "/userdata/system/configs/openbor/config.ini");
+	handle = fopen(path, "rb");
+#endif
+
+	if (handle == NULL)
+	{
+		strcat(path, "./config.ini");
+		handle = fopen(path, "rb");
+	}
+	
+	if (handle != NULL)
+	{
+		char line[1024] = "";
+		clearsettings();
+		
+		while (fgets(line, 1024, handle))
+		{
+			strtok(line, "\n");
+
+			char* pch = strstr(line, "=");
+			if (pch != NULL)
+			{
+				char key[1024] = "";
+				char value[1024] = "";
+
+				strncpy(key, line, pch - line);
+				strcpy(value, pch + 1);
+
+				if (strcmp(key, "gamma") == 0)
+					savedata.gamma = atoi(value);
+				if (strcmp(key, "brightness") == 0)
+					savedata.brightness = atoi(value);
+				if (strcmp(key, "soundvol") == 0)
+					savedata.soundvol = atoi(value);
+				if (strcmp(key, "usemusic") == 0)
+					savedata.usemusic = atoi(value);
+				if (strcmp(key, "musicvol") == 0)
+					savedata.musicvol = atoi(value);
+				if (strcmp(key, "effectvol") == 0)
+					savedata.effectvol = atoi(value);
+				if (strcmp(key, "usejoy") == 0)
+					savedata.usejoy = atoi(value);
+				if (strcmp(key, "mode") == 0)
+					savedata.mode = atoi(value);
+				if (strcmp(key, "windowpos") == 0)
+					savedata.windowpos = atoi(value);
+				if (strcmp(key, "showtitles") == 0)
+					savedata.showtitles = atoi(value);
+				if (strcmp(key, "videoNTSC") == 0)
+					savedata.videoNTSC = atoi(value);
+				if (strcmp(key, "swfilter") == 0)
+					savedata.swfilter = atoi(value);
+				if (strcmp(key, "logo") == 0)
+					savedata.logo = atoi(value);
+				if (strcmp(key, "uselog") == 0)
+					savedata.uselog = atoi(value);
+				if (strcmp(key, "debuginfo") == 0)
+					savedata.debuginfo = atoi(value);
+				if (strcmp(key, "debuginfo") == 0)
+					savedata.debuginfo = atoi(value);
+				if (strcmp(key, "fullscreen") == 0)
+					savedata.fullscreen = atoi(value);
+				if (strcmp(key, "stretch") == 0)
+					savedata.stretch = atoi(value);
+				if (strcmp(key, "vsync") == 0)
+					savedata.vsync = atoi(value);
+#if SDL
+				if (strcmp(key, "usegl") == 0)
+					savedata.usegl = atoi(value);
+				if (strcmp(key, "hwscale") == 0)
+					savedata.hwscale = atof(value);
+				if (strcmp(key, "hwfilter") == 0)
+					savedata.hwfilter = atoi(value);
+
+				if (strcmp(key, "savesDir") == 0)
+					strcpy(savesDir, value);
+				if (strcmp(key, "screenShotsDir") == 0)
+					strcpy(screenShotsDir, value);					
+#endif
+
+				char tmp[255];
+				for (int i = 0; i < MAX_PLAYERS; i++)
+				{
+					sprintf(tmp, "joyrumble.%i", i);
+					if (strcmp(key, tmp) == 0)
+						savedata.joyrumble[i] = atoi(value);
+
+					for (int j = 0; j < MAX_BTN_NUM; j++)
+					{
+						sprintf(tmp, "keys.%i.%i", i, j);
+						if (strcmp(key, tmp) == 0)
+							savedata.keys[i][j] = atoi(value);
+					}
+				}
+			}
+		}
+
+		fclose(handle);
+		return true;
+	}
+
+	return false;
+}
+//FCA 
+
+
 void saveasdefault()
 {
+	saveToIni(); return; // FCA
+
 #ifndef DC
     FILE *handle = NULL;
     char path[MAX_BUFFER_LEN] = {""};
@@ -2618,9 +2813,10 @@ void saveasdefault()
 #endif
 }
 
-
 void loadsettings()
 {
+	loadfromdefault(); return; // FCA : disable per game settings
+
 #ifndef DC
     FILE *handle = NULL;
     char path[MAX_BUFFER_LEN] = {""};
@@ -2652,6 +2848,8 @@ void loadsettings()
 
 void loadfromdefault()
 {
+	if (loadfromIni()) return; // FCA		
+
 #ifndef DC
     FILE *handle = NULL;
     char path[MAX_BUFFER_LEN] = {""};
@@ -2659,16 +2857,17 @@ void loadfromdefault()
     strcat(path, "default.cfg");
     clearsettings();
     handle = fopen(path, "rb");
-    if(handle == NULL)
-    {
-        return;
-    }
-    fread(&savedata, 1, sizeof(savedata), handle);
-    fclose(handle);
-    if(savedata.compatibleversion != COMPATIBLEVERSION)
-    {
-        clearsettings();
-    }
+	if (handle != NULL)
+	{
+		fread(&savedata, 1, sizeof(savedata), handle);
+		fclose(handle);
+	}
+
+	if (savedata.compatibleversion != COMPATIBLEVERSION)
+	{
+		clearsettings();
+	}
+	
 #else
     clearsettings();
 #endif
@@ -34544,6 +34743,8 @@ void inputrefresh(int playrecmode)
         bothnewkeys |= player[p].newkeys;
     }
 
+    if((bothkeys & (FLAG_START + FLAG_ESC)) == FLAG_START + FLAG_ESC) // FCA : hotkey/start exit
+      borShutdown(0, DEFAULT_SHUTDOWN_MESSAGE);
 }
 
 void execute_keyscripts()
@@ -35269,7 +35470,8 @@ void apply_controls()
 
     for(p = 0; p < MAX_PLAYERS; p++)
     {
-        control_setkey(playercontrolpointers[p], FLAG_ESC,        CONTROL_ESC);
+        //control_setkey(playercontrolpointers[p], FLAG_ESC,        CONTROL_ESC); // FCA
+		control_setkey(playercontrolpointers[p], FLAG_ESC,	      savedata.keys[p][SDID_ESC]); // FCA
         control_setkey(playercontrolpointers[p], FLAG_MOVEUP,     savedata.keys[p][SDID_MOVEUP]);
         control_setkey(playercontrolpointers[p], FLAG_MOVEDOWN,   savedata.keys[p][SDID_MOVEDOWN]);
         control_setkey(playercontrolpointers[p], FLAG_MOVELEFT,   savedata.keys[p][SDID_MOVELEFT]);
@@ -35419,7 +35621,7 @@ void borShutdown(int status, char *msg, ...)
 
     if(status != 2)
     {
-        display_credits();
+        // display_credits(); // FCA : fast shutdown
     }
 
     if(startup_done)
@@ -39801,7 +40003,7 @@ void openborMain(int argc, char **argv)
                 relback = 1;
                 started = 0;
             }
-
+					
             if(bothnewkeys & FLAG_ESC)
             {
                 quit = 1;

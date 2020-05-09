@@ -67,8 +67,18 @@ void borExit(int reset)
     exit(reset);
 }
 
+extern void loadsettings(); // FCA
+
 int main(int argc, char *argv[])
 {
+	// FCA : Set exe directory
+	char* dirsep = strrchr(argv[0], '\\');
+	if (dirsep == NULL) dirsep = strrchr(argv[0], '/');
+	if (dirsep != NULL) *dirsep = 0;
+	chdir(argv[0]);
+	loadsettings();
+	// FCA
+
 #ifndef SKIP_CODE
 	char pakname[MAX_FILENAME_LEN] = {""};
 #endif
@@ -106,6 +116,13 @@ int main(int argc, char *argv[])
 
 	packfile_mode(0);
 
+#if !WIN
+	// FCA
+	strcpy(savesDir, "/userdata/saves/openbor");
+	strcpy(logsDir, "/userdata/system/configs/openbor/Logs");
+	strcpy(screenShotsDir, "/userdata/screenshots");
+#endif
+
 #ifdef ANDROID
     if(strstr(SDL_AndroidGetExternalStoragePath(), "org.openbor.engine"))
     {
@@ -132,11 +149,14 @@ int main(int argc, char *argv[])
     chdir(rootDir);
 #endif
 
-	dirExists(paksDir, 1);
+	if (argc <= 1) // FCA
+		dirExists(paksDir, 1);
+
 	dirExists(savesDir, 1);
 	dirExists(logsDir, 1);
 	dirExists(screenShotsDir, 1);
 
+	if (argc > 1) strcpy(packfile, argv[1]); else // FCA : Command line
 	Menu();
 #ifndef SKIP_CODE
 	getPakName(pakname, -1);
