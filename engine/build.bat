@@ -14,7 +14,7 @@
 set BUILDBATCH=1
 set TOOLS=../tools/bin;../tools/7-Zip;../tools/svn/bin;../tools/mingit/mingw32/bin;
 set PATH=%TOOLS%
-bash.exe build.sh all
+bash.exe build.sh 5
 @endlocal
 
 @rem ----------------------- Batch CMD Line Scripts ------------------------
@@ -31,5 +31,5 @@ bash.exe version.sh 1
 :missing
 @endlocal
 
-pause
+REM pause
 

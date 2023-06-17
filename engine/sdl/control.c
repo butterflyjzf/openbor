@@ -292,13 +292,13 @@ void getPads(Uint8* keystate, Uint8* keystate_def)
 			if (joystick[i] == NULL) continue;
 
 			// check buttons
-			for(j = 0; j < joysticks[i].NumButtons; j++)
+			for(j = 0; j < SDL_JoystickNumButtons(joystick[i]); j++)
             {
                 joysticks[i].Buttons |= SDL_JoystickGetButton(joystick[i], j) << j;
             }
 
 			// check axes
-			for(j = 0; j < joysticks[i].NumAxes; j++)
+			for(j = 0; j < SDL_JoystickNumAxes(joystick[i]); j++)
 			{
 				axis = SDL_JoystickGetAxis(joystick[i], j);
 				if(axis < -1*T_AXIS)  { joysticks[i].Axes |= 0x01 << (j*2); }
@@ -306,10 +306,8 @@ void getPads(Uint8* keystate, Uint8* keystate_def)
 			}
 
 			// check hats
-			for(j = 0; j < joysticks[i].NumHats; j++)
+			for(j = 0; j < SDL_JoystickNumHats(joystick[i]); j++)
             {
-                //joysticks[i].Hats |= SDL_JoystickGetHat(joystick[i], j) << (j*4);
-
                 Uint8 hat_value = SDL_JoystickGetHat(joystick[i], j);
                 if(hat_value & SDL_HAT_UP)      joysticks[i].Hats |= SDL_HAT_UP     << (j*4);
                 if(hat_value & SDL_HAT_RIGHT)   joysticks[i].Hats |= SDL_HAT_RIGHT  << (j*4);
@@ -318,9 +316,10 @@ void getPads(Uint8* keystate, Uint8* keystate_def)
             }
 
 			// combine axis, hat, and button state into a single value
-			joysticks[i].Data = joysticks[i].Buttons;
-			joysticks[i].Data |= joysticks[i].Axes << joysticks[i].NumButtons;
-			joysticks[i].Data |= joysticks[i].Hats << (joysticks[i].NumButtons + 2*joysticks[i].NumAxes);
+
+			joysticks[i].Data = (u64) joysticks[i].Buttons;
+			joysticks[i].Data |= (u64) joysticks[i].Axes << (u64) joysticks[i].NumButtons;
+			joysticks[i].Data |= (u64) joysticks[i].Hats << (u64) (joysticks[i].NumButtons + 2*joysticks[i].NumAxes);
 		}
 	}
 
@@ -412,9 +411,11 @@ void open_joystick(int i)
        printf("\nWarning: Unable to initialize joystick in port: %d! SDL Error: %s\n", i, SDL_GetError());
        return;
     }
-    joysticks[i].NumHats = SDL_JoystickNumHats(joystick[i]);
-    joysticks[i].NumAxes = SDL_JoystickNumAxes(joystick[i]);
-    joysticks[i].NumButtons = SDL_JoystickNumButtons(joystick[i]);
+
+	// FCA : hardcode NumButtons, NumAxes & NumHats for injection
+	joysticks[i].NumHats = 4;     // SDL_JoystickNumHats(joystick[i]);
+	joysticks[i].NumAxes = 8;     // SDL_JoystickNumAxes(joystick[i]);
+	joysticks[i].NumButtons = 20; // SDL_JoystickNumButtons(joystick[i]);
 
     strcpy(joysticks[i].Name, SDL_JoystickName(i));
 

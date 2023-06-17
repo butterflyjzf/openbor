@@ -37783,7 +37783,7 @@ int load_saved_game()
         if(saveslot >= num_difficulties) // not found
         {
             _menutextm(2, -4, 0, Tr("Load Game"));
-            _menutext(0, col1, -2, Tr("Saved File:"));
+            _menutext(0, col1, -2, Tr("Saved File"));
             _menutext(0, col2, -2, Tr("Not Found!"));
             _menutextm(1, 6, 0, Tr("Back"));
 
@@ -37792,7 +37792,7 @@ int load_saved_game()
         else
         {
             _menutextm(2, -4, 0, Tr("Load Game"));
-            _menutext(0, col1, -2, Tr("Saved File:"));
+            _menutext(0, col1, -2, Tr("Saved File"));
             if(savedStatus)
             {
                 _menutext(0, col2, -2, "%s", name);
@@ -38420,8 +38420,8 @@ void keyboard_setup(int player)
 
     while(!quit)
     {
-        voffset = -6;
-        _menutextm(2, -8, 0, Tr("Player %i"), player + 1);
+        voffset = -9;
+        _menutextm(2, -11, 0, Tr("Player %i"), player + 1);
         for(i = 0; i < btnnum; i++)
         {
             if(!disabledkey[i])
@@ -38432,7 +38432,7 @@ void keyboard_setup(int player)
             }
         }
         #if SDL || WII || DC
-        ++voffset;
+        // ++voffset;
         if(savedata.joyrumble[player])
         {
             _menutext((selector == OPTIONS_NUM - 3), col1, voffset++, Tr("Rumble Enabled"));
@@ -38723,15 +38723,15 @@ void menu_options_sound()
     while(!quit)
     {
         _menutextm(2, -5, 0, Tr("Sound Options"));
-        _menutext((selector == 0), col1, -2, Tr("Sound Volume:"));
+        _menutext((selector == 0), col1, -2, Tr("Sound Volume"));
         _menutext((selector == 0), col2, -2, "%i", savedata.soundvol);
-        _menutext((selector == 1), col1, -1, Tr("SFX Volume:"));
+        _menutext((selector == 1), col1, -1, Tr("SFX Volume"));
         _menutext((selector == 1), col2, -1, "%i", savedata.effectvol);
-        _menutext((selector == 2), col1, 0, Tr("Music Volume:"));
+        _menutext((selector == 2), col1, 0, Tr("Music Volume"));
         _menutext((selector == 2), col2, 0, "%i", savedata.musicvol);
-        _menutext((selector == 3), col1, 1, Tr("BGM:"));
+        _menutext((selector == 3), col1, 1, Tr("BGM"));
         _menutext((selector == 3), col2, 1, (savedata.usemusic ? Tr("Enabled") : Tr("Disabled")));
-        _menutext((selector == 4), col1, 2, Tr("Show Titles:"));
+        _menutext((selector == 4), col1, 2, Tr("Show Titles"));
         _menutext((selector == 4), col2, 2, (savedata.showtitles ? Tr("Yes") : Tr("No")));
         _menutextm((selector == 5), 5, 0, Tr("Back"));
 
@@ -39033,23 +39033,23 @@ void menu_options_debug()
         // Reset menu item position Y.
         pos_y = MENU_POS_Y + MENU_ITEMS_MARGIN_Y;
 
-        _menutext((selector == ITEM_PERFORMANCE),    COLUMN_1_POS_X, pos_y, Tr("Performance:"));
+        _menutext((selector == ITEM_PERFORMANCE),    COLUMN_1_POS_X, pos_y, Tr("Performance"));
         _menutext((selector == ITEM_PERFORMANCE),    COLUMN_2_POS_X, pos_y, (savedata.debuginfo & DEBUG_DISPLAY_PERFORMANCE ? Tr("Enabled") : Tr("Disabled")));
         pos_y++;
 
-        _menutext((selector == ITEM_POSITION),       COLUMN_1_POS_X, pos_y, Tr("Basic Properties:"));
+        _menutext((selector == ITEM_POSITION),       COLUMN_1_POS_X, pos_y, Tr("Basic Properties"));
         _menutext((selector == ITEM_POSITION),       COLUMN_2_POS_X, pos_y, (savedata.debuginfo & DEBUG_DISPLAY_PROPERTIES ? Tr("Enabled") : Tr("Disabled")));
         pos_y++;
 
-        _menutext((selector == ITEM_COL_ATTACK),     COLUMN_1_POS_X, pos_y, Tr("Collision Attack:"));
+        _menutext((selector == ITEM_COL_ATTACK),     COLUMN_1_POS_X, pos_y, Tr("Collision Attack"));
         _menutext((selector == ITEM_COL_ATTACK),     COLUMN_2_POS_X, pos_y, (savedata.debuginfo & DEBUG_DISPLAY_COLLISION_ATTACK ? Tr("Enabled") : Tr("Disabled")));
         pos_y++;
 
-        _menutext((selector == ITEM_COL_BODY),       COLUMN_1_POS_X, pos_y, Tr("Collision Body:"));
+        _menutext((selector == ITEM_COL_BODY),       COLUMN_1_POS_X, pos_y, Tr("Collision Body"));
         _menutext((selector == ITEM_COL_BODY),       COLUMN_2_POS_X, pos_y, (savedata.debuginfo & DEBUG_DISPLAY_COLLISION_BODY ? Tr("Enabled") : Tr("Disabled")));
         pos_y++;
 
-        _menutext((selector == ITEM_COL_RANGE),      COLUMN_1_POS_X, pos_y, Tr("Range:"));
+        _menutext((selector == ITEM_COL_RANGE),      COLUMN_1_POS_X, pos_y, Tr("Range"));
         _menutext((selector == ITEM_COL_RANGE),      COLUMN_2_POS_X, pos_y, (savedata.debuginfo & DEBUG_DISPLAY_RANGE ? Tr("Enabled") : Tr("Disabled")));
         pos_y++;
 
@@ -39186,19 +39186,19 @@ void menu_options_system()
     {
         _menutextm(2, SYS_OPT_Y_POS-2, 0, Tr("System Options"));
 
-        _menutext(0, col1, SYS_OPT_Y_POS, Tr("Total RAM:"));
+        _menutext(0, col1, SYS_OPT_Y_POS, Tr("Total RAM"));
         _menutext(0, col2, SYS_OPT_Y_POS, Tr("%s KB"), commaprint(getSystemRam(KBYTES)));
 
-        _menutext(0, col1, SYS_OPT_Y_POS+1, Tr("Used RAM:"));
+        _menutext(0, col1, SYS_OPT_Y_POS+1, Tr("Used RAM"));
         _menutext(0, col2, SYS_OPT_Y_POS+1, Tr("%s KB"), commaprint(getUsedRam(KBYTES)));
 
-        _menutext(0, col1, SYS_OPT_Y_POS+2, Tr("Max Players:"));
+        _menutext(0, col1, SYS_OPT_Y_POS+2, Tr("Max Players"));
         _menutext(0, col2, SYS_OPT_Y_POS+2, Tr("%i"), levelsets[current_set].maxplayers);
 
-        _menutext((selector == SYS_OPT_LOG), col1, SYS_OPT_Y_POS+4, Tr("File Logging:"));
+        _menutext((selector == SYS_OPT_LOG), col1, SYS_OPT_Y_POS+4, Tr("File Logging"));
         _menutext((selector == SYS_OPT_LOG), col2, SYS_OPT_Y_POS+4, (savedata.uselog ? Tr("Enabled") : Tr("Disabled")));
 
-        _menutext((selector == SYS_OPT_VSDAMAGE), col1, SYS_OPT_Y_POS+5, Tr("Versus Damage:"), 0);
+        _menutext((selector == SYS_OPT_VSDAMAGE), col1, SYS_OPT_Y_POS+5, Tr("Versus Damage"), 0);
         if(versusdamage == 0)
         {
             _menutext((selector == SYS_OPT_VSDAMAGE), col2, SYS_OPT_Y_POS+5, Tr("Disabled by Module"));
@@ -39219,7 +39219,7 @@ void menu_options_system()
             }
         }
 
-        _menutext((selector == SYS_OPT_CHEATS), col1, SYS_OPT_Y_POS+6, Tr("Cheats:"));
+        _menutext((selector == SYS_OPT_CHEATS), col1, SYS_OPT_Y_POS+6, Tr("Cheats"));
         _menutext((selector == SYS_OPT_CHEATS), col2, SYS_OPT_Y_POS+6, forcecheatsoff ? Tr("Disabled by Module") : (cheats ? Tr("On") : Tr("Off")));
         if(!nodebugoptions) _menutext((selector == SYS_OPT_DEBUG), col1, SYS_OPT_Y_POS+7, Tr("Debug Settings..."));
 
@@ -39373,15 +39373,15 @@ void menu_options_video()
     while(!quit)
     {
         _menutextm(2, -5, 0, Tr("Video Options"));
-        _menutext((selector == 0), col1, -3, Tr("Brightness:"));
+        _menutext((selector == 0), col1, -3, Tr("Brightness"));
         _menutext((selector == 0), col2, -3, "%i", savedata.brightness);
-        _menutext((selector == 1), col1, -2, Tr("Gamma:"));
+        _menutext((selector == 1), col1, -2, Tr("Gamma"));
         _menutext((selector == 1), col2, -2, "%i", savedata.gamma);
-        _menutext((selector == 2), col1, -1, Tr("Window Offset:"));
+        _menutext((selector == 2), col1, -1, Tr("Window Offset"));
         _menutext((selector == 2), col2, -1, "%i", savedata.windowpos);
 
 #if OPENDINGUX
-        _menutext((selector == 3), col1, 0, Tr("Display Mode:"));
+        _menutext((selector == 3), col1, 0, Tr("Display Mode"));
         _menutext((selector == 3), col2, 0, savedata.fullscreen ? Tr("Full") : Tr("Window"));
         _menutextm((selector == 4), 6, 0, Tr("Back"));
         if(selector < 0)
@@ -39422,13 +39422,13 @@ void menu_options_video()
 
 #if SDL
 #if !defined(GP2X) && !defined(OPENDINGUX)
-        _menutext((selector == 3), col1, 0, Tr("Display Mode:"));
+        _menutext((selector == 3), col1, 0, Tr("Display Mode"));
         _menutext((selector == 3), col2, 0, savedata.fullscreen ? Tr("Full") : Tr("Window"));
 
-        _menutext((selector == 4), col1, 1, Tr("Video Backend:"));
+        _menutext((selector == 4), col1, 1, Tr("Video Backend"));
         _menutext((selector == 4), col2, 1, (opengl ? Tr("OpenGL") : Tr("SDL")));
 
-        _menutext((selector == 5), col1, 2, Tr("Scale:"));
+        _menutext((selector == 5), col1, 2, Tr("Scale"));
 #ifdef ANDROID
         if(savedata.hwscale == 0)
 #else
@@ -39442,7 +39442,7 @@ void menu_options_video()
             _menutext((selector == 5), col2, 2, "%4.2fx - %ix%i", savedata.hwscale, (int)(videomodes.hRes * savedata.hwscale), (int)(videomodes.vRes * savedata.hwscale));
         }
 
-        _menutext((selector == 6), col1, 3, Tr("Hardware Filter:"));
+        _menutext((selector == 6), col1, 3, Tr("Hardware Filter"));
         {
             char *filterName;
             if (savedata.hwscale == 1.0 && !savedata.fullscreen)
@@ -39456,15 +39456,15 @@ void menu_options_video()
             _menutext((selector == 6), col2, 3, Tr(filterName));
         }
 
-        _menutext((selector == 7), col1, 4, Tr("Software Filter:"));
+        _menutext((selector == 7), col1, 4, Tr("Software Filter"));
         _menutext((selector == 7), col2, 4, ((savedata.hwscale >= 2.0 || savedata.fullscreen) ? Tr(GfxBlitterNames[savedata.swfilter]) : Tr("Disabled")));
 
-        _menutext((selector == 8), col1, 5, Tr("VSync:"));
+        _menutext((selector == 8), col1, 5, Tr("VSync"));
         _menutext((selector == 8), col2, 5, savedata.vsync ? "Enabled" : "Disabled");
 
         if(savedata.fullscreen)
         {
-            _menutext((selector == 9), col1, 6, Tr("Fullscreen Type:"));
+            _menutext((selector == 9), col1, 6, Tr("Fullscreen Type"));
             _menutext((selector == 9), col2, 6, (savedata.stretch ? Tr("Stretch to Screen") : Tr("Preserve Aspect Ratio")));
         }
         else if(selector == 9)

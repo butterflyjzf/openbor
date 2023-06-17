@@ -18,8 +18,8 @@ export MAKEFLAGS=-j4
 
 # Display Version
 function version {
-  . ./version.sh
-  make version
+  # . ./version.sh
+  # make version
   mkdir -p releases
   cp README ./releases/README.txt
   cp LICENSE ./releases/LICENSE.txt
