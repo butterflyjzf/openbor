@@ -2447,6 +2447,7 @@ void clearsettings()
     savedata.uselog = 1;
     savedata.debuginfo = 0;
     savedata.fullscreen = 1; // FCA : default to fullscreen
+    savedata.vsync = 1;
 	
 	#if WII
     savedata.stretch = 1;
@@ -34408,7 +34409,7 @@ void display_credits()
         font_printf(col1, s + v * m,  0, 0, "Caskey, Damon V.");
         font_printf(col2, s + v * m,  0, 0, "Project Lead"); ++m;
 
-        font_printf(col1, s + v * m,  0, 0, "White Dragon");
+        font_printf(col1, s + v * m,  0, 0, "Msmalik681");
         font_printf(col2, s + v * m,  0, 0, "Developer"); ++m;
 
         font_printf(col1, s + v * m,  0, 0, "Plombo");
@@ -34424,24 +34425,27 @@ void display_credits()
         font_printf(col2, s + v * m, 0, 0, "Orochi_X");  ++m;
         font_printf(col1, s + v * m, 0, 0, "SX");
         font_printf(col2, s + v * m,  0, 0, "Tails"); ++m;
-        font_printf(col1, s + v * m,  0, 0, "uTunnels"); ++m;
+        font_printf(col1, s + v * m,  0, 0, "uTunnels");
+		font_printf(col2, s + v * m,  0, 0, "White Dragon"); ++m;
 
         font_printf(_strmidx(1, "Ports"), s + v * m,  1, 0, "Ports"); ++m;
         font_printf(col1, s + v * m, 0, 0, "PSP/Linux/OSX");
         font_printf(col2, s + v * m, 0, 0, "SX"); ++m;
 
+        /*
         font_printf(col1, s + v * m, 0, 0, "OpenDingux");
         font_printf(col2, s + v * m, 0, 0, "Shin-NiL"); ++m;
 
         font_printf(col1, s + v * m, 0, 0, "DreamCast");
         font_printf(col2, s + v * m, 0, 0, "Neill Corlett, SX"); ++m;
+        */
 
         font_printf(col1, s + v * m, 0, 0, "Wii");
         font_printf(col2, s + v * m, 0, 0, "Plombo, SX"); ++m;
 
         font_printf(col1, s + v * m, 0, 0, "Android");
         font_printf(col2, s + v * m, 0, 0, "CRxTRDude, Plombo,"); ++m;
-        font_printf(col2, s + v * m, 0, 0, "uTunnels,"); ++m;
+        font_printf(col2, s + v * m, 0, 0, "uTunnels, Msmalik681"); ++m;
         font_printf(col2, s + v * m, 0, 0, "White Dragon"); ++m;
 
         font_printf(col1,  s + v * m, 0, 0, "PS Vita");
@@ -38148,22 +38152,25 @@ void menu_options_video()
         _menutext((selector == 7), col1, 4, Tr("Software Filter:"));
         _menutext((selector == 7), col2, 4, ((savedata.hwscale >= 2.0 || savedata.fullscreen) ? Tr(GfxBlitterNames[savedata.swfilter]) : Tr("Disabled")));
 
+        _menutext((selector == 8), col1, 5, Tr("VSync:"));
+        _menutext((selector == 8), col2, 5, savedata.vsync ? "Enabled" : "Disabled");
+
         if(savedata.fullscreen)
         {
-            _menutext((selector == 8), col1, 5, Tr("Fullscreen Type:"));
-            _menutext((selector == 8), col2, 5, (savedata.stretch ? Tr("Stretch to Screen") : Tr("Preserve Aspect Ratio")));
+            _menutext((selector == 9), col1, 6, Tr("Fullscreen Type:"));
+            _menutext((selector == 9), col2, 6, (savedata.stretch ? Tr("Stretch to Screen") : Tr("Preserve Aspect Ratio")));
         }
-        else if(selector == 8)
+        else if(selector == 9)
         {
-            selector = (bothnewkeys & FLAG_MOVEUP) ? 7 : 9;
+            selector = (bothnewkeys & FLAG_MOVEUP) ? 8 : 10;
         }
 
-        _menutextm((selector == 9), 7, 0, Tr("Back"));
+        _menutextm((selector == 10), 8, 0, Tr("Back"));
         if(selector < 0)
         {
-            selector = 9;
+            selector = 10;
         }
-        if(selector > 9)
+        if(selector > 10)
         {
             selector = 0;
         }
@@ -38443,6 +38450,10 @@ void menu_options_video()
 				video_set_mode(videomodes);
                 break;
             case 8:
+                savedata.vsync = !savedata.vsync;
+                video_set_mode(videomodes);
+                break;
+            case 9:
                 video_stretch((savedata.stretch ^= 1));
                 break;
 #endif
